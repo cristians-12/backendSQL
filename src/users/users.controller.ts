@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Request } from 'express';
 import { Users } from './users.entity';
@@ -14,8 +14,13 @@ export class UsersController {
   }
 
   @Post()
-  addUser(@Req() request: Request): Promise<Users> {
+  addUser(@Req() request: Request): Promise<any> {
     console.log(request.body);
     return this.userService.addUser(request.body);
+  }
+
+  @Delete(':userId')
+  deleteUser(@Param('userId') userId: string): Promise<Users> {
+    return this.userService.deleteUser(userId);
   }
 }
