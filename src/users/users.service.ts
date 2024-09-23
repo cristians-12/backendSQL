@@ -14,6 +14,16 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
+  async findUser(userId: string): Promise<Users | any> {
+    const result = await this.userRepository.findOne({
+      where: { id: parseInt(userId) },
+    });
+
+    if (!result) return { message: 'User not found' };
+
+    return result;
+  }
+
   async addUser(user: UserCreateDto): Promise<any> {
     try {
       const result = await this.userRepository.save(user);
@@ -30,5 +40,13 @@ export class UsersService {
     } else {
       return { message: 'No se ha encontrado el usuario' };
     }
+  }
+
+  async updateUser(id: string, user: UserCreateDto): Promise<Users> {
+    let userToUpdate = await this.userRepository.findOne({
+      where: { id: parseInt(id) },
+    });
+    let updated = Object.assign(userToUpdate, user);
+    return this.userRepository.save(updated);
   }
 }
