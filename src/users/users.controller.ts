@@ -12,6 +12,7 @@ import { UsersService } from './users.service';
 import { Request } from 'express';
 import { Users } from './users.entity';
 import { UserCreateDto } from './dto/create-user.request';
+import { ErrorHandler } from '@nestjs/common/interfaces';
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +25,13 @@ export class UsersController {
   }
 
   @Post()
-  addUser(@Body() newUser: UserCreateDto): Promise<Users> {
+  addUser(
+    @Body() newUser: UserCreateDto,
+  ): Promise<{
+    message: string;
+    result?: UserCreateDto;
+    error?: ErrorHandler;
+  }> {
     console.log(newUser);
     return this.userService.addUser(newUser);
   }

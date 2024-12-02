@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './users.entity';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from './dto/create-user.request';
+import { ErrorHandler } from '@nestjs/common/interfaces';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +25,11 @@ export class UsersService {
     return result;
   }
 
-  async addUser(user: UserCreateDto): Promise<any> {
+  async addUser(user: UserCreateDto): Promise<{
+    message: string;
+    result?: UserCreateDto;
+    error?: ErrorHandler;
+  }> {
     try {
       const result = await this.userRepository.save(user);
       return { message: 'Usuario agregado correctamente', result };
