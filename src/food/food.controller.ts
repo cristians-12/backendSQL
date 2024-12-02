@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { Injector } from '@nestjs/core/injector/injector';
 import { FoodService } from './food.service';
 import { Food } from './food.entity';
@@ -9,12 +9,25 @@ export class FoodController {
   constructor(private foodService: FoodService) {}
 
   @Get()
-  async findAllFoods() {
-    return this.foodService.findAll();
+  async findById(
+    @Query('id') id: number,
+    @Query('name') name: string,
+    @Query('price') price: number,
+  ) {
+    return this.foodService.findByQuery({ name, price, id });
   }
+  // @Get()
+  // async findAllFoods() {
+  //   return this.foodService.findAll();
+  // }
 
   @Post()
-  async createFood(@Body() food: Food): Promise<FoodCreateDto> {
+  async createFood(@Body() food: FoodCreateDto) {
     return this.foodService.create(food);
+  }
+
+  @Delete()
+  async deleteFood(@Query('name') name: string, @Query('id') id: number) {
+    return this.foodService.delete({ name, id });
   }
 }
